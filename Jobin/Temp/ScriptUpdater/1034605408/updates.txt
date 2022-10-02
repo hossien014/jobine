@@ -1,0 +1,1 @@
+Temp/ScriptUpdater/1034605408\76150158_TextureScaler.cs => Assets/CharacterCreator2D/Creator UI/Scripts/UICreator/TextureScaler.cs
