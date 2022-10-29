@@ -4,6 +4,7 @@ using Abed.Utils;
 
 namespace Abed.Controler
 {
+    [RequireComponent(typeof(jumpBehavours))]
     public class Jump : MonoBehaviour
     {
         #region filds
@@ -22,18 +23,19 @@ namespace Abed.Controler
         bool israyHit;
         bool coyot = false;
         public bool falling = false;
-        [SerializeField] bool toucContol = true;
 
+        bool toucContol = true;
+        [SerializeField] bool itsPlayer=false   ;
         int grounded_C, perper_C, jump_C, inFlight_C, landed_C;
         private float lastTimeJump, lastTimeGrounded;
 
-        [SerializeField] float coyoteTimeTereshold = 1;
-        [SerializeField] float GravityMultiply = 2.5f;
-        [SerializeField] float LowJumpMultyPly = 2f;
-        [SerializeField] float landingDistance = 0.3f;
-        [SerializeField] float jumpAcclreation = 0.5f;
-        [SerializeField] int jumpVelocity = 20;
-        [SerializeField] float downRayLeant = 5;
+         float coyoteTimeTereshold = 1;
+         float GravityMultiply = 2.5f;
+         float LowJumpMultyPly = 2f;
+         float landingDistance = 0.3f;
+         float jumpAcclreation = 0.5f;
+         int jumpVelocity = 20;
+         float downRayLeant = 5;
         #endregion
         #region event
         public event Action<float> OnJump;
@@ -45,52 +47,47 @@ namespace Abed.Controler
         #endregion
         private void Awake()
         {
+            
             rb = GetComponent<Rigidbody2D>();
             Slog = FindObjectOfType<ScreenLog>();
             ShosColider = GetComponentInChildren<shosColider>();
             touch = FindObjectOfType<SwipeDetection>();
             controls = new Controls();
             controls.movement.Enable();
-
-            rayPos = GameObject.Find("rayPos").transform;
+            rayPos = transform.Find("rayPos").transform;
         }
         private void Update()
         {
             jumpProtocol();
             PerformCrouch();
-      
-
         }
+
+
         public void jumpProtocol()
         {
-            setKey();
-            SetFildeValue(); // move to awake on final build
+            if(itsPlayer) setKey();
             setGround();
             performJump();
-            coyoteJump();
+            if(itsPlayer) coyoteJump();
             SetGravity();
             Ray();
             debugJUmp();
         }
 
-        private void SetFildeValue()
-        {
-
-        }
 
         private void setKey()
         {
-            // touch contorl only 
             if (toucContol)
             {
                 JumpPresed = touch.SwipeUp;
                 crouch = touch.SwipeDown;
             }
-
-            //normal control
-            controls.movement.jump.performed += ctx => { JumpPresed = true; };
-            controls.movement.jump.canceled += ctx => { JumpPresed = false; };
-            controls.movement.crouch.performed += ctx => { crouch = true; };
+           else 
+            {
+                controls.movement.jump.performed += ctx => { JumpPresed = true; };
+                controls.movement.jump.canceled += ctx => { JumpPresed = false; };
+                controls.movement.crouch.performed += ctx => { crouch = true; };
+            }
         }
         private void setGround()
         {
@@ -119,7 +116,6 @@ namespace Abed.Controler
                 perper_C += 1;
                 lastTimeJump = Time.time;
                 canUseCcoyote = false;
-
             }
             if (jumpstate == JumpStat.PrepareToJump)
             {
@@ -192,6 +188,17 @@ namespace Abed.Controler
             {
                 crouch = false;
             }
+        }
+
+        public void Setting(bool toucContol, float coyoteTimeTereshold,float GravityMultiply, float LowJumpMultyPly, float landingDistance, int jumpVelocity, float downRayLeant)
+        {
+            this.toucContol = toucContol;
+            this.coyoteTimeTereshold = coyoteTimeTereshold;
+            this.GravityMultiply = GravityMultiply;
+            this.LowJumpMultyPly = LowJumpMultyPly;
+            this.landingDistance = landingDistance;
+            this.jumpVelocity = jumpVelocity;
+            this.downRayLeant = downRayLeant;
         }
         void debugJUmp() //delete for final build
         {

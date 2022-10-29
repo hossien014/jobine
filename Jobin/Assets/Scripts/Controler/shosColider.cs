@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Abed.Controler
 {
+    [RequireComponent(typeof(BoxCollider2D))]
     public class shosColider : MonoBehaviour
     {
-
         bool grounded;
         public int grounded_C, perper_C, jump_C, inFlight_C, landed_C;
         public float lastTimeJump, lastTimeGrounded;

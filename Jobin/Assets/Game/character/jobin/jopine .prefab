@@ -109,6 +109,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.8073282, y: 0.029348}
   m_EdgeRadius: 0
+--- !u!1 &1153968457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1153968458}
+  m_Layer: 2
+  m_Name: jobinCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1153968458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153968457}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 5.57, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2217657961357033682}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &75652497063696238
 GameObject:
   m_ObjectHideFlags: 0
@@ -16175,6 +16206,7 @@ GameObject:
   - component: {fileID: 882113971}
   - component: {fileID: 882113972}
   - component: {fileID: 882113977}
+  - component: {fileID: 3154360135434881129}
   m_Layer: 2
   m_Name: 'jopine '
   m_TagString: Untagged
@@ -16191,12 +16223,13 @@ Transform:
   m_GameObject: {fileID: 8052919256225588442}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8926953739697400828}
   - {fileID: 1054670830}
   - {fileID: 710832127}
+  - {fileID: 1153968458}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16609,12 +16642,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movestate: 0
-  touchControl: 0
-  lockVelocity: 1
-  maxSpeed: 25
-  acceleration: 1
-  speed: 500
-  jumpVelocity: 15
 --- !u!114 &882113972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16630,14 +16657,7 @@ MonoBehaviour:
   jumpstate: 0
   rayPos: {fileID: 710832127}
   falling: 0
-  toucContol: 0
-  coyoteTimeTereshold: 1
-  GravityMultiply: 2.5
-  LowJumpMultyPly: 2
-  landingDistance: 0.3
-  jumpAcclreation: 0.5
-  jumpVelocity: 15
-  downRayLeant: 5
+  itsPlayer: 1
 --- !u!114 &882113977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16648,6 +16668,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a821ecc54f1be1f48927b74ee49b0cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  touchControl: 0
+  acceleration: 1
+  lockVelocity: 0
+  maxSpeed: 25
+  speed: 500
+  jumpVelocity: 15
+  coyoteTimeTereshold: 1
+  GravityMultiply: 2.5
+  LowJumpMultyPly: 2
+  landingDistance: 0.3
+  jumpAcclreation: 0.5
+  downRayLeant: 5
+--- !u!114 &3154360135434881129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8052919256225588442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc72aed422f0a5c4ebe7efb7a93a6b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8143738231738295531

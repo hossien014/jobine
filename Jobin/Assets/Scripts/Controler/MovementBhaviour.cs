@@ -3,84 +3,87 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-namespace Abed.Controler { 
+namespace Abed.Controler {
+    [RequireComponent(typeof(Walk))]
+    [RequireComponent(typeof(Jump))]
    public class MovementBhaviour : MonoBehaviour
 {
-    Jump JumpS;
-    Animator animator;
-    Rigidbody2D rb;
-
+      //  Animator animator;
+      //  Rigidbody2D rb;
         Controls controls;
         Utilis util;
         SwipeDetection touch;
-        [SerializeField] bool touchControl;
-        [SerializeField] bool lockVelocity;
-
-        [SerializeField] float maxSpeed = 25;
+        [SerializeField] bool touchControl=false;
+        #region walk
+        Walk walk;
+        [Header("walke setting")]
         [SerializeField] float acceleration = 1;
-        [SerializeField] int speed = 500;
-        [SerializeField] int jumpVelocity = 15;
+        [SerializeField] bool lockVelocity;
+        [SerializeField] float maxSpeed = 25;
+        [SerializeField] float speed = 500;
+        bool IswalkCanceld =false;
         float dir;
         float inputValue;
+        #endregion
+        #region jump
+        Jump JumpS;
+
+        [Header("jump setting")]
+        [SerializeField] int jumpVelocity = 15;
+        [SerializeField] float coyoteTimeTereshold = 1;
+        [SerializeField] float GravityMultiply = 2.5f;
+        [SerializeField] float LowJumpMultyPly = 2f;
+        [SerializeField] float landingDistance = 0.3f;
+        [SerializeField] float jumpAcclreation = 0.5f;
+        [SerializeField] float downRayLeant = 5;
+        #endregion
         void Awake()
     {
-        JumpS = FindObjectOfType<Jump>();  
-        animator= GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
+        JumpS = GetComponent<Jump>();  
+       // animator= GetComponent<Animator>();
+        //rb = GetComponent<Rigidbody2D>();
+        util = FindObjectOfType<Utilis>();
+        touch = FindObjectOfType<SwipeDetection>();
         controls = new Controls();
-         util = FindObjectOfType<Utilis>();
-            touch = FindObjectOfType<SwipeDetection>();
+        controls.movement.Enable();
+        walk = GetComponent<Walk>();
         }
-    private void Start()
-    {
-        // B short for behaviuor
-        JumpS.OnJump += OnJumpB;
-        JumpS.OnGround += OnGroundB;
-        JumpS.OnCoyoteJump += OnCoyoteJumpB;
-        JumpS.Onlanding += OnlandingB;
-        JumpS.OnCrouch += OnCrouchB;
-    }
         private void FixedUpdate()
         {
-            FindObjectOfType<ScreenLog>().Log(4, controls.movement.walk.ReadValue<float>());
-            print(controls.movement.walk.ReadValue<float>());
+            setting();
+            IntractWhitWalke();
         }
-        void Update()
-    {
-        OnfalingB();
 
-
-
+        private void setting()
+        {
+            walk.Setting(lockVelocity, maxSpeed, speed);
+            JumpS.Setting(touchControl, coyoteTimeTereshold, GravityMultiply, LowJumpMultyPly, landingDistance, jumpVelocity, downRayLeant);
         }
-        private void OnCoyoteJumpB(float jumpVelocity)
-    {
-        print("coyot");
-        rb.velocity = new Vector2(0, jumpVelocity);
-        animator.SetBool("jump_A", true);
-    }
-    void OnJumpB(float jumpVelocity)
-    {
-        animator.SetBool("jump_A", true);
-        rb.velocity = new Vector2(0, jumpVelocity);
 
+        private void IntractWhitWalke()
+        {
+            GetDir();
+            IswalkCanceld = false;
+            controls.movement.walk.canceled += ctx => { IswalkCanceld = true; };
+            walk.Move(GetDir(), IswalkCanceld);
+        }
 
-    }
-    void OnGroundB()
-    {
-        animator.SetBool("jump_A", false);
-    }  
-    void OnfalingB()
-    {
-        animator.SetBool("falling_a", JumpS.falling);
-
-    }
-    void OnlandingB(RaycastHit2D hit)
-    {
-        animator.SetBool("jump_A", false);
-    }
-    void OnCrouchB(bool crouch)
-    {
-        animator.SetBool("crouch_A", crouch);
-    }
+        private float GetDir()
+        {
+            if (touchControl)
+            {
+                if (touch.SwipeRight) dir = util.TimeAcceleration(1, acceleration);
+                if (touch.SwipeLeft) dir = util.TimeAcceleration(-1, acceleration);
+                if (touch.tap || touch.SwipeDown) dir = 0f;
+                return dir;
+            }
+            else
+            {
+                inputValue = controls.movement.walk.ReadValue<float>();
+                dir = util.TimeAcceleration(inputValue, acceleration);
+                return dir;
+            }
+        }
+ 
 }
 }
