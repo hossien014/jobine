@@ -1,31 +1,29 @@
+
 using System.Collections;
 using UnityEngine;
 using Abed.Utils;
-using System;
-using System.Runtime.CompilerServices;
-using System.Collections.Generic;
 
 public class testHitmap : MonoBehaviour
 {
-   
-    gridG<HeatMapClass> gridg;
+
+    Grid_Utils<HeatMapClass> gridg;
     //    [SerializeField] HeatMapVisual heatmapvitual;
     //  [SerializeField] HeatMapBoolVisual heatmapboolvitual;
     [SerializeField] HeatMapGenericVisual heatMapGenericvitual;
     void Awake()
     {
         int cellsize = 5;
-        gridg = new gridG<HeatMapClass>
-       (30, 30,cellsize, new Vector3(-60, -25), (gridG<HeatMapClass> Tgrid,int x ,int y) => { return new HeatMapClass(Tgrid,x,y); });
+        gridg = new Grid_Utils<HeatMapClass>
+       (30, 30, cellsize, new Vector3(-60, -25), (Grid_Utils<HeatMapClass> Tgrid, int x, int y) => { return new HeatMapClass(Tgrid, x, y); });
         heatMapGenericvitual.SetGrid(gridg);
         StartCoroutine(counter());
-       
+
     }
     private void Update()
     {
         updatheatmap();
     }
-     IEnumerator counter()
+    IEnumerator counter()
     {
         while (true)
         {
@@ -38,13 +36,13 @@ public class testHitmap : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-         //   bool value = gridg.GetValue(position);
-         //   int addvlue = 10;
-           // int fullyrange = 2;
-       //     int totalrange = 10;
-           // gridg.SetValue(position, true);
+            //   bool value = gridg.GetValue(position);
+            //   int addvlue = 10;
+            // int fullyrange = 2;
+            //     int totalrange = 10;
+            // gridg.SetValue(position, true);
 
-            Vector3 position = Utilis.GetMousePos();
+            Vector3 position = _Utils.GetMousePos();
             HeatMapClass Heatmapclass = gridg.GetGridObject(position);
             if (Heatmapclass != null)
             {
@@ -52,20 +50,21 @@ public class testHitmap : MonoBehaviour
 
             }
         }
-        Vector3 positionN = Utilis.GetMousePos();
+        Vector3 positionN = _Utils.GetMousePos();
 
 
-        for(int i=0; i < Utilis.AlphabetKeycod().Length; i++)
+        for (int i = 0; i < _Utils.AlphabetKeycod().Length; i++)
         {
-            if (Input.GetKeyDown(Utilis.AlphabetKeycod()[i]))
+            if (Input.GetKeyDown(_Utils.AlphabetKeycod()[i]))
             {
-                gridg.GetGridObject(positionN).addStringValue(Utilis.AlphabetKeyStrung()[i]);
+                gridg.GetGridObject(positionN).addStringValue(_Utils.AlphabetKeyStrung()[i]);
             }
         }
     }
 }
-public class HeatMapClass{
-    gridG<HeatMapClass> grid;
+public class HeatMapClass
+{
+    Grid_Utils<HeatMapClass> grid;
     int x;
     int y;
     int value;
@@ -74,7 +73,7 @@ public class HeatMapClass{
 
     string stringValue = ("\n" + "null");
 
-    public HeatMapClass(gridG<HeatMapClass> grid, int x, int y)
+    public HeatMapClass(Grid_Utils<HeatMapClass> grid, int x, int y)
     {
         this.grid = grid;
         this.x = x;

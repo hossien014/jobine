@@ -73,3 +73,20 @@ crashlytics-build.properties
 abde allhe/Library/
 
 Jobin/Library/
+Jobin/obj/Release/Unity.VisualScripting.Core.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.Core.Editor.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.Core.Player.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.Flow.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.Flow.Editor.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.Flow.Player.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.SettingsProvider.Editor.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.Shared.Editor.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.State.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.State.Editor.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualScripting.State.Player.csproj.AssemblyReference.cache
+Jobin/obj/Release/Unity.VisualStudio.Editor.csproj.AssemblyReference.cache
+Jobin/obj/Release/
+Jobin/obj/
+Jobin/Assets/CharacterCreator2D/
+Jobin/Temp/
+Jobin/Assets/packges_/CodeMonkey/

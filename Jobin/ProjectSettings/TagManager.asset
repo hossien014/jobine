@@ -7,6 +7,7 @@ TagManager:
   - ground
   - grid/xmh/
   - Grid
+  - waypoint
   layers:
   - Default
   - TransparentFX

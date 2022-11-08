@@ -1,43 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class testcoroutien : MonoBehaviour
 {
-    int num=0;
+    float a = 357.2f;
+    float b = 361.8f;
+    bool stop = false;
     WaitForSeconds wait = new WaitForSeconds(3);
-    void Start()
+    private void Update()
     {
-    //    StartCoroutine(test2());
+        if (a >= b)
+        {
+            stop = true;
+        }
+        if (!stop)
+        {
+            a += 1;
+            print("a+1 =>" + (a));
+        }
     }
-    public static void prints()
-    {
-        print("aaaa");
-    }
-   ////IEnumerator test1()
-   //// {
-   ////     while (num < 5)
-   ////     {
-   ////         num++;
-   ////     print("aaa"+num);
-   ////     yield return new WaitForSeconds(3);
-
-   ////     }
-   ////     print("num finshed");
-   ////     yield return wait;
-   ////     print("finshed");
-   //// }
-    
-   // IEnumerator test2()
-   // {
-   //  while(true)
-   //     {
-   //         num++;
-   //     print("aaa"+num);
-   //         yield return num;
-
-   //     }
 
 
-   // }
 }

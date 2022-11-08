@@ -830,12 +830,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 522266378}
     m_Modifications:
     - target: {fileID: 671985623, guid: 55abefcc5dd7f5b419d886ed4a26e674, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 671985623, guid: 55abefcc5dd7f5b419d886ed4a26e674, type: 3}
       propertyPath: maxSpeed
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 671985623, guid: 55abefcc5dd7f5b419d886ed4a26e674, type: 3}
       propertyPath: StopDistance
-      value: 13
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5987437982267010959, guid: 55abefcc5dd7f5b419d886ed4a26e674, type: 3}
       propertyPath: m_RootOrder
@@ -1373,10 +1377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f486737a1f9ccc43976ecdec0204791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellSize: 3
-  DogridAllGrounds: 0
-  DoDeleteAllGrid: 0
-  parent: {fileID: 39072025}
 --- !u!1 &561292269
 GameObject:
   m_ObjectHideFlags: 0
@@ -1521,7 +1521,7 @@ MonoBehaviour:
   - {fileID: 919828137}
   - {fileID: 721158235}
   - {fileID: 1208322681}
-  DbugTexts: {fileID: 1665642153}
+  DbugTexts: {fileID: 0}
 --- !u!1 &638747343
 GameObject:
   m_ObjectHideFlags: 3
@@ -1640,7 +1640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpstate: 0
-  rayPos: {fileID: 0}
+  rayPos: {fileID: 1799136233}
   falling: 0
   itsPlayer: 0
 --- !u!114 &671985629
@@ -3201,6 +3201,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &1799136233 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4497100461463436266, guid: 55abefcc5dd7f5b419d886ed4a26e674, type: 3}
+  m_PrefabInstance: {fileID: 431128426}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1836186513
 GameObject:
   m_ObjectHideFlags: 0

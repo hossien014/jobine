@@ -1,19 +1,15 @@
 using Abed.Utils;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 public class HeatMapGenericVisual : MonoBehaviour
 {
-    gridG<HeatMapClass> grid;
+    Grid_Utils<HeatMapClass> grid;
     Mesh Mesh;
     Vector3[] vertciesT;
     Vector2[] uvT;
     int[] triangleT;
     bool updateMesh;
-    public void SetGrid(gridG<HeatMapClass> grid)
+    public void SetGrid(Grid_Utils<HeatMapClass> grid)
     {
         this.grid = grid;
     }
@@ -26,7 +22,7 @@ public class HeatMapGenericVisual : MonoBehaviour
         UpdateHeatMapMesh();
     }
 
-    private void Grid_OnValueChange(object sender, gridG<HeatMapClass>.OnvalueChangeClass e)
+    private void Grid_OnValueChange(object sender, Grid_Utils<HeatMapClass>.OnvalueChangeClass e)
     {
         updateMesh = true;
     }
@@ -41,18 +37,18 @@ public class HeatMapGenericVisual : MonoBehaviour
     void UpdateHeatMapMesh()
     {
         int quadCount = grid.GetWidth() * grid.GetHeight();
-        MeshU.CreateEmptyMeshArrys(quadCount, out vertciesT, out uvT, out triangleT);
+        Mesh_Utils.CreateEmptyMeshArrys(quadCount, out vertciesT, out uvT, out triangleT);
         for (int x = 0; x < grid.GetWidth(); x++)
         {
             for (int y = 0; y < grid.GetHeight(); y++)
             {
-                int indext = x * grid.GetHeight()+ y;
+                int indext = x * grid.GetHeight() + y;
                 Vector3 size = new Vector3(grid.GetCellSize(), grid.GetCellSize());
-                HeatMapClass heatmapclass = grid.GetGridObject(x,y);
+                HeatMapClass heatmapclass = grid.GetGridObject(x, y);
                 float normalizeValueForUV = heatmapclass.GetValueNormalized();
-                print(heatmapclass.GetValue()+"value||"+ heatmapclass.GetValueNormalized() + "normal");
+                print(heatmapclass.GetValue() + "value||" + heatmapclass.GetValueNormalized() + "normal");
                 Vector2 uvByValue = new Vector2(normalizeValueForUV, normalizeValueForUV);
-                MeshU.SetMeshArrays(indext, vertciesT, uvT, triangleT, size, grid.GetWorldPosition(x, y), uvByValue, uvByValue);
+                Mesh_Utils.SetMeshArrays(indext, vertciesT, uvT, triangleT, size, grid.GetWorldPosition(x, y), uvByValue, uvByValue);
             }
         }
         Mesh.vertices = vertciesT;
