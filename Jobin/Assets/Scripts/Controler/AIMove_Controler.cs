@@ -14,6 +14,7 @@ namespace Abed.Controler
         Transform center;
         Vector2 position;
         Vector2 targetPos;
+        Vector2 target111Pos;
         [SerializeField] float StopDistance = 9f;
         #region walk
         Walk_Controler walk;
