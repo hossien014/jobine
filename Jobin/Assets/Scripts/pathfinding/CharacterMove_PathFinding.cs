@@ -40,9 +40,9 @@ public class CharacterMove_PathFinding : MonoBehaviour
         {
             if (path != null && path.Count > 1 && path.Count > i)
             {
-                print("dir  = " + _Utils.GetDirction(transform.position, path[i]));
+                print("dir  = " + _Utils.GetDirction8(transform.position, path[i]));
                 print("i=  " + i);
-                var dir = _Utils.GetDirction(transform.position, path[i]);
+                var dir = _Utils.GetDirction8(transform.position, path[i]);
                 transform.position += dir * speed * Time.deltaTime;
                 float distance = Vector3.Distance(transform.position, path[i]);
                 if (distance < 2) i++;

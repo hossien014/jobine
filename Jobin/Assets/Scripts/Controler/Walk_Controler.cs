@@ -1,11 +1,6 @@
 ﻿using Abed.Utils;
 using UnityEngine;
-/* Unmerged change from project '_Controler.Player'
-Before:
-using Abed.Utils;
-After:
-using UnityEngine;
-*/
+
 
 
 namespace Abed.Controler

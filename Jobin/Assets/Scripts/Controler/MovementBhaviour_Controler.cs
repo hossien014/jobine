@@ -11,7 +11,7 @@ namespace Abed.Controler
         //  Animator animator;
         //  Rigidbody2D rb;
         Controls controls;
-        _Utils _utils;
+        _UtilsM _utils;
         SwipeDetection_Controler touch;
         [SerializeField] bool touchControl = false;
         #region walk
@@ -42,7 +42,7 @@ namespace Abed.Controler
             JumpS = GetComponent<Jump_Controler>();
             // animator= GetComponent<Animator>();
             //rb = GetComponent<Rigidbody2D>();
-            _utils = FindObjectOfType<_Utils>();
+            _utils = FindObjectOfType<_UtilsM>();
             touch = FindObjectOfType<SwipeDetection_Controler>();
             controls = new Controls();
             controls.movement.Enable();

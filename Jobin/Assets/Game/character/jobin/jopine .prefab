@@ -16207,6 +16207,7 @@ GameObject:
   - component: {fileID: 882113972}
   - component: {fileID: 882113977}
   - component: {fileID: 3154360135434881129}
+  - component: {fileID: 1269558492}
   m_Layer: 2
   m_Name: 'jopine '
   m_TagString: Untagged
@@ -16672,7 +16673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   touchControl: 0
   acceleration: 1
-  lockVelocity: 0
+  lockVelocity: 1
   maxSpeed: 25
   speed: 500
   jumpVelocity: 15
@@ -16692,6 +16693,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc72aed422f0a5c4ebe7efb7a93a6b9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1269558492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8052919256225588442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fde754861dca054b90f5dad4494f654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8143738231738295531

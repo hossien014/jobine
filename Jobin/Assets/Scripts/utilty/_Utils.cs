@@ -1,76 +1,13 @@
 ﻿
-/* Unmerged change from project '_Utils.Player'
-Before:
-using System.Collections;
-After:
-using System;
-using System.Collections;
-*/
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-/* Unmerged change from project '_Utils.Player'
-Before:
-using System;
-using UnityEngine.TextCore.Text;
-After:
-using UnityEngine.TextCore.Text;
-*/
 
 
 namespace Abed.Utils
 {
-    public class _Utils : MonoBehaviour
+    public static class  _Utils 
     {
-        Action TimerCallback;
-
-        float timer = 0;
-        float accTimer = 0;
-
-        private void Update()
-        {
-            if (timer > 0)
-            {
-                timer -= Time.deltaTime;
-                if (IsTimerComplet())
-                {
-                    TimerCallback();
-                }
-            }
-        }
-        #region Timers
-        /// <summary>
-        /// عدد که میگرید را تا زمان تعیین شده می شمارد
-        /// </summary>
-        /// <param name="number">عدد که شمارده می شود</param>
-        /// <param name="time">زمان شمارش</param>
-        /// <returns></returns>
-        public float TimeAcceleration(float number, float time)
-        {
-            if (number == 0) accTimer = 0;
-            float divied = number / time;
-            accTimer += Time.deltaTime;
-            float Acceleration = Mathf.Clamp(divied * accTimer, -1, 1);
-            return Acceleration;
-        }
-        /// <summary>
-        /// یک تایمر را شروع می کند .و بعد از پایان تایمر دستور یا فانکشن دریافتی را اجرا می کند
-        /// </summary>
-        /// <param name="resetTime">بعد از اتمام این زمان دستور اجرا می شود </param>
-        /// <param name="TimerCallback">فانکشن  یا دستوری که بعد از اتمام تایمر انجام می شود</param>
-        /// <returns></returns>
-        public float Timer(float resetTime, Action TimerCallback)
-        {
-            this.TimerCallback = TimerCallback;
-            timer = resetTime;
-            return timer;
-        }
-
-        public bool IsTimerComplet()
-        {
-            return timer <= 0;
-        }
-        #endregion
+    
         /// <summary>
         /// بازدن دکمه اف پنج صفحه ریست می شود
         /// </summary>
@@ -114,6 +51,17 @@ namespace Abed.Utils
             return textmesh;
 
         }
+        public static GameObject DBugTextInWorld(string Name, string Text, Vector3 pos, int offset)
+        {
+            GameObject WorldText = GameObject.Find(Name);
+            if (WorldText == null)
+            {
+                WorldText = new GameObject(Name, typeof(TextMesh));
+            }
+            WorldText.transform.position = pos + Vector3.up * offset;
+            WorldText.transform.GetComponent<TextMesh>().text = Text;
+            return WorldText;
+        }
         public static Vector3 GetMousePos()
         {
             return Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -123,17 +71,11 @@ namespace Abed.Utils
             KeyCode[] Alphabet = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.T, KeyCode.Y, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L, KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V, KeyCode.B, KeyCode.N, KeyCode.M };
             return Alphabet;
         }
-        public static string[] AlphabetKeyStrung()
+        public static string[] AlphabetKeyString()
         {
             string[] Alphabet = { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M" };
             return Alphabet;
         }
-        /// <summary>
-        /// get tow posision and return where b object is 
-        /// </summary>
-        /// <param name="a"> base object</param>
-        /// <param name="b"> secndery object</param>
-        /// <returns></returns>
         #region colider
         //public static Vector3 GetColider_Lower_Left(BoxCollider2D targetColider) // obsolete 
         //{
@@ -198,12 +140,12 @@ namespace Abed.Utils
         }
         #endregion
         #region Debug
-        public static void DrawDebugSquer(Vector3 P, float size)
+        public static void DrawDebugSquer(Vector3 Pos, float size)
         {
-            Debug.DrawLine(P, new Vector3(P.x + size, P.y), Color.black, 1000);
-            Debug.DrawLine(new Vector3(P.x + size, P.y), new Vector3(P.x + size, P.y + size), Color.black, 1000);
-            Debug.DrawLine(new Vector3(P.x + size, P.y + size), new Vector3(P.x, P.y + size), Color.black, 1000);
-            Debug.DrawLine(new Vector3(P.x, P.y + size), P, Color.black, 1000);
+            Debug.DrawLine(Pos, new Vector3(Pos.x + size, Pos.y), Color.black, 1000);
+            Debug.DrawLine(new Vector3(Pos.x + size, Pos.y), new Vector3(Pos.x + size, Pos.y + size), Color.black, 1000);
+            Debug.DrawLine(new Vector3(Pos.x + size, Pos.y + size), new Vector3(Pos.x, Pos.y + size), Color.black, 1000);
+            Debug.DrawLine(new Vector3(Pos.x, Pos.y + size), Pos, Color.black, 1000);
         }
         public static void DrawOrgineLine(Vector3 orgine) // draw line up and fornt of orgine 
         {
@@ -215,7 +157,7 @@ namespace Abed.Utils
         }
         #endregion
         #region Dirctions
-        public static Vector3 GetDirction(Vector3 a, Vector3 b)
+        public static Vector3 GetDirction8(Vector3 a, Vector3 b)
         {
             if (b.x > a.x)
             {
@@ -233,7 +175,15 @@ namespace Abed.Utils
             if (b.y < a.y && b.x == a.x) { /*print("down")*/return new Vector3(0, -1); }
             if (b.y > a.y && b.x == a.x) { /*print("up")*/ return new Vector3(0, 1); }
 
+            Debug.Log("Its 0 dirction");
             return Vector3.zero;
+        }
+        public static Vector3 GetDirction2(Vector3 a, Vector3 b)
+        {
+            if (b.y == a.y) {/* print("right")*/ return new Vector3(1, 0); }
+            if (b.y == a.y) { /*print("left");*/return new Vector3(-1, 0); }
+            return Vector3.zero;
+
         }
         public static Vector3[] DirctionArray4()
         {
@@ -259,7 +209,16 @@ namespace Abed.Utils
             dirctions[6] = new Vector3(-1, -1, 0); //down left
             return dirctions;
         }
-
+        public static Vector3 RoundVector(this Vector3 vector)
+        {
+            var roundVector = new Vector3(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), Mathf.RoundToInt(vector.z));
+            return roundVector;
+        }
+        public static Vector3 FloorVector(this Vector3 vector)
+        {
+            var roundVector = new Vector3(Mathf.FloorToInt(vector.x), Mathf.FloorToInt(vector.y), Mathf.FloorToInt(vector.z));
+            return roundVector;
+        }
         #endregion
     }
 }

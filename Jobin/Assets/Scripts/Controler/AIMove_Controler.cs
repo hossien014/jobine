@@ -1,10 +1,12 @@
 
+using Abed.Controler;
 using Abed.Utils;
+using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Abed.Controler
-{
+//namespace Abed.Controler
+//{
     [RequireComponent(typeof(Walk_Controler))]
     public class AIMove_Controler : MonoBehaviour
     {
@@ -14,7 +16,6 @@ namespace Abed.Controler
         Transform center;
         Vector2 position;
         Vector2 targetPos;
-        Vector2 target111Pos;
         [SerializeField] float StopDistance = 9f;
         #region walk
         Walk_Controler walk;
@@ -25,6 +26,7 @@ namespace Abed.Controler
         bool IswalkCanceld = false;
         float dir;
         float inputValue;
+        
         #endregion
         void Start()
         {
@@ -39,9 +41,21 @@ namespace Abed.Controler
             walk.Setting(lockVelocity, maxSpeed, speed);
             center = gameObject.transform.Find("enmeyCenter");
             position = center.transform.position;
-            detectTargtDirction();
+           // detectTargtDirction();
 
         }
+       /*public void MoveTo(List<testnod> path)
+        {
+            foreach (testnod testnod in path)
+            {
+                if (Vector3.Distance(transform.position, testnod.pos) > StopDistance)
+                {
+                    walk.Move(testnod.Dir.x, testnod.Dir.x == 0);
+                }
+                else continue;
+            }
+        }
+       */
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
@@ -50,30 +64,50 @@ namespace Abed.Controler
             Gizmos.DrawSphere(targetPos, 0.5f);
 
         }
+        //public void detectTargtDirction()
+        //{
+        //    //Distance();
+        //    sLog.Log(0, Distance());
+        //    if (Distance().x > 0)
+        //    {
+        //        sLog.Log(1, "right");
+        //        walk.Move(1, false);
 
-        private void detectTargtDirction()
+        //    }
+        //    if (Distance().x < 0)
+        //    {
+        //        sLog.Log(1, "left");
+        //        walk.Move(-1, false);
+        //    }
+        //    if (Mathf.Abs(Distance().x) < 7)
+        //    {
+        //        walk.Move(0, true);
+        //        sLog.Log(1, "reach");
+        //    }
+
+        //}
+        public void detectTargtDirction()
         {
-            //Distance();
-            sLog.Log(0, Distance());
+
+            //sLog.Log(0, Distance());
             if (Distance().x > 0)
             {
-                sLog.Log(1, "right");
+               // sLog.Log(1, "right");
                 walk.Move(1, false);
 
             }
             if (Distance().x < 0)
             {
-                sLog.Log(1, "left");
+                //sLog.Log(1, "left");
                 walk.Move(-1, false);
             }
             if (Mathf.Abs(Distance().x) < 7)
             {
                 walk.Move(0, true);
-                sLog.Log(1, "reach");
+                //sLog.Log(1, "reach");
             }
 
         }
-
         private Vector2 Distance()
         {
             targetPos = target.position;
@@ -81,4 +115,4 @@ namespace Abed.Controler
             return distance;
         }
     }
-}
+//}
