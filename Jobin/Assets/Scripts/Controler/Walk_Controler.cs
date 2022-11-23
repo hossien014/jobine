@@ -1,8 +1,5 @@
-﻿using Abed.Utils;
+using Abed.Utils;
 using UnityEngine;
-
-
-
 namespace Abed.Controler
 {
     public class Walk_Controler : MonoBehaviour
@@ -12,7 +9,7 @@ namespace Abed.Controler
 
         Rigidbody2D rb;
         Animator animator;
-        ShosColider_Controler sColid;
+        //ShosColider_Controler sColid;
 
         bool lockVelocity;
         float maxSpeed = 25;
@@ -22,7 +19,7 @@ namespace Abed.Controler
         {
             rb = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
-            sColid = GetComponentInChildren<ShosColider_Controler>();
+           // sColid = GetComponentInChildren<ShosColider_Controler>();
         }
         private void FixedUpdate()
         {
@@ -42,7 +39,7 @@ namespace Abed.Controler
             preformWalk();
             if (walkIsCanceld) { movestate = MoveState.Stoping; };
             if (Mathf.Abs(dir) > 0) movestate = MoveState.Walking;
-
+    
         }
 
         private void FilpSprit()
@@ -56,7 +53,7 @@ namespace Abed.Controler
             if (movestate == MoveState.Stoping) rb.velocity = new Vector2(0, rb.velocity.y);
             animator.SetFloat("speed_A", Mathf.Abs(dir));
 
-            if (!sColid.getGround())
+            if (!GetComponent<Jump_Controler>().grounded)
             {
                 animator.SetFloat("speed_A", 0);
             }

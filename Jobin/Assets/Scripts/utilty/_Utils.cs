@@ -51,7 +51,7 @@ namespace Abed.Utils
             return textmesh;
 
         }
-        public static GameObject DBugTextInWorld(string Name, string Text, Vector3 pos, int offset)
+        public static GameObject DBugTextInWorld(string Name, string Text, Vector3 pos, int offset,Transform parent)
         {
             GameObject WorldText = GameObject.Find(Name);
             if (WorldText == null)
@@ -60,6 +60,7 @@ namespace Abed.Utils
             }
             WorldText.transform.position = pos + Vector3.up * offset;
             WorldText.transform.GetComponent<TextMesh>().text = Text;
+            WorldText.transform.SetParent(parent);
             return WorldText;
         }
         public static Vector3 GetMousePos()

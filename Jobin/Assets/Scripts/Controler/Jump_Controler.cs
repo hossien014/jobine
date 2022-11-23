@@ -13,13 +13,13 @@ namespace Abed.Controler
 
         Controls controls;
         Rigidbody2D rb;
-        ShosColider_Controler ShosColider;
+        //ShosColider_Controler ShosColider;
         SwipeDetection_Controler touch;
         ScreenLog_Utils Slog;
 
         [SerializeField] Transform rayPos;
-
-        bool grounded, JumpPresed, jumping, canUseCcoyote, crouch, crouchPresed, onlyOne;
+        [SerializeField] LayerMask groundLayer;
+        public bool grounded, JumpPresed, jumping, canUseCcoyote, crouch, crouchPresed, onlyOne;
         bool israyHit;
         bool coyot = false;
         public bool falling = false;
@@ -50,7 +50,7 @@ namespace Abed.Controler
 
             rb = GetComponent<Rigidbody2D>();
             Slog = FindObjectOfType<ScreenLog_Utils>();
-            ShosColider = GetComponentInChildren<ShosColider_Controler>();
+           // ShosColider = GetComponentInChildren<ShosColider_Controler>();
             touch = FindObjectOfType<SwipeDetection_Controler>();
             controls = new Controls();
             controls.movement.Enable();
@@ -70,7 +70,7 @@ namespace Abed.Controler
             performJump();
             if (itsPlayer) coyoteJump();
             SetGravity();
-            Ray();
+            //Ray();
             debugJUmp();
         }
 
@@ -91,9 +91,10 @@ namespace Abed.Controler
         }
         private void setGround()
         {
-            grounded = ShosColider.getGround();
-            lastTimeJump = ShosColider.lastTimeJump;
-            lastTimeGrounded = ShosColider.lastTimeGrounded;
+            //grounded = ShosColider.getGround();
+           // lastTimeJump = ShosColider.lastTimeJump;
+           // lastTimeGrounded = ShosColider.lastTimeGrounded;
+            boxRayGroundCheck();
             if (grounded == false)
             {
                 jumping = false;
@@ -101,12 +102,51 @@ namespace Abed.Controler
             }
             if (grounded)
             {
+                lastTimeGrounded=Time.time; //fix this
                 jumpstate = JumpStat.Grounded; //to check for dellet 
                 falling = false;
                 canUseCcoyote = true;
                 OnGround?.Invoke();
             }
+
         }
+
+        private void boxRayGroundCheck()
+        {
+          
+            var boxcolier = GetComponent<BoxCollider2D>();
+            Color colColor = Color.green;
+            float extraHeghit = 2f;
+            RaycastHit2D ratHit = Physics2D.BoxCast(boxcolier.bounds.center, boxcolier.bounds.size, 0f, Vector2.down, extraHeghit, groundLayer);
+
+            if (ratHit.collider == null) { 
+             grounded = false;
+             colColor = Color.red; }
+            else { 
+            grounded = true;
+            colColor = Color.green;
+                if (falling && ratHit.distance <= landingDistance)
+                {
+                    jumpstate = JumpStat.Lande;
+                    if (onlyOne)
+                    {
+                        landed_C += 1;
+                        onlyOne = false;
+                        Onlanding?.Invoke(ratHit);
+                    }
+                }
+            }
+           
+            ShowBoxRay(boxcolier, colColor, extraHeghit);
+        }
+
+        private static void ShowBoxRay(BoxCollider2D boxcolier, Color colColor, float extraHeghit)
+        {
+            Debug.DrawRay(boxcolier.bounds.center + new Vector3(boxcolier.bounds.extents.x, 0), Vector3.down * (boxcolier.bounds.extents.y + extraHeghit), colColor);
+            Debug.DrawRay(boxcolier.bounds.center - new Vector3(boxcolier.bounds.extents.x, 0), Vector3.down * (boxcolier.bounds.extents.y + extraHeghit), colColor);
+            Debug.DrawRay(boxcolier.bounds.center - new Vector3(boxcolier.bounds.extents.x, boxcolier.bounds.extents.y + extraHeghit), Vector3.right * (boxcolier.bounds.extents.x + extraHeghit), colColor);
+        }
+
         private void performJump()
         {
             if (JumpPresed && (grounded) ||
@@ -155,7 +195,7 @@ namespace Abed.Controler
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (LowJumpMultyPly - 1) * Time.deltaTime;
             }
         }
-        void Ray()
+       /* void Ray()
         {
             RaycastHit2D hit = Physics2D.Raycast(new Vector2(rayPos.position.x
             , rayPos.position.y - 0.09f), Vector2.down, downRayLeant, 1);
@@ -179,7 +219,7 @@ namespace Abed.Controler
                 }
             }
             else israyHit = false;
-        }
+        }*/
         void PerformCrouch()
         {
             OnCrouch?.Invoke(crouch);

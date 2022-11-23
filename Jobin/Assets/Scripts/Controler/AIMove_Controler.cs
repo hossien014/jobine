@@ -43,6 +43,7 @@ using UnityEngine;
             center = gameObject.transform.Find("enmeyCenter");
             position = center.transform.position;
             thePath= FindObjectOfType<Path>().ThePath;
+           Distance();
            // detectTargtDirction();
         }
         private void FixedUpdate()
@@ -52,9 +53,10 @@ using UnityEngine;
 
     private void FollowThePath()
     {
-        if (thePath == null) return;
-        if (thePath.Count < 4) return;
-        GetComponent<Walk_Controler>().Move(thePath[0].Dir.x, false);
+        if(Distance()<=StopDistance ){ walk.Move(0,true) ;return;}
+        if (thePath == null) { walk.Move(0, true)        ;return; }
+        if (thePath.Count == 0) { walk.Move(0, true)     ;return;}
+        walk.Move(thePath[0].Dir.x, false);
     }
 
     /*public void MoveTo(List<testnod> path)
@@ -71,9 +73,9 @@ using UnityEngine;
 */
     private void OnDrawGizmos()
         {
-        if(thePath.Count==0) return;
-        Gizmos.color=Color.red;
-        Gizmos.DrawSphere(thePath[0].pos,0.6f);
+       // Gizmos.color=Color.red;
+       // if(thePath.Count==0||thePath==null ) return;
+       // Gizmos.DrawSphere(thePath[0].pos,0.6f);
         }
         //public void detectTargtDirction()
         //{
@@ -97,32 +99,35 @@ using UnityEngine;
         //    }
 
         //}
-        public void detectTargtDirction()
-        {
+        // public void detectTargtDirction()
+        // {
 
-            //sLog.Log(0, Distance());
-            if (Distance().x > 0)
-            {
-               // sLog.Log(1, "right");
-                walk.Move(1, false);
+        //     //sLog.Log(0, Distance());
+        //     if (Distance().x > 0)
+        //     {
+        //        // sLog.Log(1, "right");
+        //         walk.Move(1, false);
 
-            }
-            if (Distance().x < 0)
-            {
-                //sLog.Log(1, "left");
-                walk.Move(-1, false);
-            }
-            if (Mathf.Abs(Distance().x) < 7)
-            {
-                walk.Move(0, true);
-                //sLog.Log(1, "reach");
-            }
+        //     }
+        //     if (Distance().x < 0)
+        //     {
+        //         //sLog.Log(1, "left");
+        //         walk.Move(-1, false);
+        //     }
+        //     if (Mathf.Abs(Distance().x) < 7)
+        //     {
+        //         walk.Move(0, true);
+        //         //sLog.Log(1, "reach");
+        //     }
 
-        }
-        private Vector2 Distance()
+        // }
+        private float Distance()
         {
             targetPos = target.position;
-            Vector2 distance = targetPos - position;
+           // Vector2 distance = targetPos - position;
+           var distance =Vector2.Distance(targetPos,transform.position);
+            sLog.Log(2,distance);
+            print(distance);
             return distance;
         }
     }

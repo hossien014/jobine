@@ -44,15 +44,15 @@ using UnityEngine;
         }
         private void GetStartAndEnd(out NodeG Start, out NodeG End)
         {
-            Start = GetNode(transform);
-            End = GetNode(Destination);
+            Start = GetNode(transform,searchCenter.orgine);
+            End = GetNode(Destination,searchCenter.orgine);
             if (DebugView) Debug.DrawLine(Start.pos, End.pos, Color.magenta, 0.3f);
         }
-        NodeG GetNode(Transform Target)
+        NodeG GetNode(Transform Target,searchCenter searchcenter)
         {
             //Vector2 key = new Vector2(Mathf.FloorToInt(Target.transform.position.x), Mathf.FloorToInt(Target.transform.position.y));
             Vector2 key = Target.transform.position.FloorVector();
-            List<NodeG> nearlist = GetInRangeNodeList(key, radius,searchCenter.center,true);
+            List<NodeG> nearlist = GetInRangeNodeList(key, radius,searchcenter,true);
 
             //  nodedic.TryGetValue(key, out testnod PNode);
             if (nearlist.Count > 0)
@@ -164,11 +164,11 @@ using UnityEngine;
         var NodeDictionery = GetNodesDictionery();
         var NearNodesList = new List<NodeG>();
 
-        int startPoint = Getstartsearch(range, searchcenter);
+          Getstartsearch(range, searchcenter,out int startPoint,out int endPoint);
 
-        for (int x = Mathf.RoundToInt(TargetNode.x - (range - startPoint)); x <= TargetNode.x + range; x++)
+        for (int x = Mathf.RoundToInt(TargetNode.x - (range - startPoint)); x <= TargetNode.x + range+endPoint; x++)
         {
-            for (int y = Mathf.RoundToInt(TargetNode.y - (range - startPoint)); y <= TargetNode.y + range; y++)
+            for (int y = Mathf.RoundToInt(TargetNode.y - (range - startPoint)); y <= TargetNode.y + range+endPoint; y++)
             {
                 //Gizmos.DrawSphere(new Vector2(x, y), 0.1f); // debug
                 if (NodeDictionery.ContainsKey(new Vector2(x, y)))
@@ -184,19 +184,16 @@ using UnityEngine;
         return NearNodesList;
     }
 
-    private static int Getstartsearch(int range, searchCenter searchcenter)
+    private void Getstartsearch(int range, searchCenter searchcenter,out int startPoint, out int endPoint)
     {
-        int startPoint;
-        if (searchcenter == searchCenter.center) startPoint = range;
-        else startPoint = 0;
-        return startPoint;
+        if (searchcenter == searchCenter.center){ startPoint = range; endPoint=range / 2;}
+        else {startPoint = 0; endPoint=range=0;}
     }
 
     public NodeG GetNearestNode(Vector3 CenterNod, List<NodeG> nearList)
         {
             if (nearList.Count == 0) return null;
             NodeG Nearestnod = nearList[0];
-            Debug.DrawLine(nearList[0].pos, nearList[0].pos + Vector3.up * 3, Color.green);
             foreach (NodeG Bnod in nearList)
             {
                 float NearaNodDis = Vector3.Distance(CenterNod, Nearestnod.pos);
@@ -206,6 +203,7 @@ using UnityEngine;
                     Nearestnod = Bnod;
                 }
             }
+            Debug.DrawLine(Nearestnod.pos, Nearestnod.pos + Vector3.up * 3, Color.green);
             return Nearestnod;
         }
         #region Debug 
@@ -247,11 +245,11 @@ using UnityEngine;
         }
     void ShowSearchBox(Vector3 pos, int radius,searchCenter searchcenter)
     {
-        int starsearch = Getstartsearch(radius,searchcenter);
-        Debug.DrawLine(new Vector3(Mathf.RoundToInt(pos.x - (radius-starsearch) ), Mathf.RoundToInt(pos.y - (radius - starsearch))), new Vector3(Mathf.RoundToInt(pos.x + radius), Mathf.RoundToInt(pos.y - (radius - starsearch))));
-        Debug.DrawLine(new Vector3(Mathf.RoundToInt(pos.x - (radius - starsearch)), Mathf.RoundToInt(pos.y + radius)), new Vector3(Mathf.RoundToInt(pos.x + radius), Mathf.RoundToInt(pos.y + radius)));
-        Debug.DrawLine(new Vector3(Mathf.RoundToInt(pos.x - (radius - starsearch)), Mathf.RoundToInt(pos.y + radius)), new Vector3(Mathf.RoundToInt(pos.x - (radius - starsearch)), Mathf.RoundToInt(pos.y - (radius - starsearch))));
-        Debug.DrawLine(new Vector3(Mathf.RoundToInt(pos.x + radius), Mathf.RoundToInt(pos.y + radius)), new Vector3(Mathf.RoundToInt(pos.x + radius), Mathf.RoundToInt(pos.y - (radius - starsearch))));
+        Getstartsearch(radius,searchcenter,out int starsearch, out int endPoint);
+        Debug.DrawLine(new Vector3(Mathf.RoundToInt(pos.x - (radius-starsearch) ), Mathf.RoundToInt(pos.y - (radius - starsearch))), new Vector3(Mathf.RoundToInt(pos.x + radius+endPoint), Mathf.RoundToInt(pos.y - (radius - starsearch)))); 
+        Debug.DrawLine(new Vector3(Mathf.RoundToInt(pos.x - (radius - starsearch)), Mathf.RoundToInt(pos.y + radius+endPoint)), new Vector3(Mathf.RoundToInt(pos.x + radius+endPoint), Mathf.RoundToInt(pos.y + radius+endPoint)));
+        Debug.DrawLine(new Vector3(Mathf.RoundToInt(pos.x - (radius - starsearch)), Mathf.RoundToInt(pos.y + radius+endPoint)), new Vector3(Mathf.RoundToInt(pos.x - (radius - starsearch)), Mathf.RoundToInt(pos.y - (radius - starsearch))));
+        Debug.DrawLine(new Vector3(Mathf.RoundToInt(pos.x + radius+endPoint), Mathf.RoundToInt(pos.y + radius+endPoint)), new Vector3(Mathf.RoundToInt(pos.x + radius+endPoint), Mathf.RoundToInt(pos.y - (radius - starsearch))));
     }
         #endregion
 
