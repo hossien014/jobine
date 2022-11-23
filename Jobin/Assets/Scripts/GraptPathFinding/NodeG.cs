@@ -19,6 +19,7 @@ using UnityEngine;
             PrimitiveSetup();
             DebugVistual();
             FindConected();
+            
         }
         private void LateUpdate()
         {
@@ -58,7 +59,7 @@ using UnityEngine;
         void FindConected()
         {
             Path Conectnod = FindObjectOfType<Path>();
-            ConectedList = Conectnod.GetInRangeNodeList(pos, 5, false);
+            ConectedList = Conectnod.GetInRangeNodeList(pos, 5,searchCenter.orgine, false);
         }
 
         //private void OnDrawGizmos()

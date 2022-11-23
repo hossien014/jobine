@@ -45,30 +45,35 @@ using UnityEngine;
             thePath= FindObjectOfType<Path>().ThePath;
            // detectTargtDirction();
         }
-        private void FixedUpdate() {
-            if(thePath==null) return;
-            if(thePath.Count < 4) return;
-            GetComponent<Walk_Controler>().Move(thePath[1].Dir.x,false);
-        }
-       /*public void MoveTo(List<testnod> path)
-        {
-            foreach (testnod testnod in path)
-            {
-                if (Vector3.Distance(transform.position, testnod.pos) > StopDistance)
-                {
-                    walk.Move(testnod.Dir.x, testnod.Dir.x == 0);
-                }
-                else continue;
-            }
-        }
-       */
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(position, targetPos);
-            Gizmos.DrawSphere(position, 0.5f);
-            Gizmos.DrawSphere(targetPos, 0.5f);
+        private void FixedUpdate()
+    {
+        FollowThePath();
+    }
 
+    private void FollowThePath()
+    {
+        if (thePath == null) return;
+        if (thePath.Count < 4) return;
+        GetComponent<Walk_Controler>().Move(thePath[0].Dir.x, false);
+    }
+
+    /*public void MoveTo(List<testnod> path)
+{
+    foreach (testnod testnod in path)
+    {
+        if (Vector3.Distance(transform.position, testnod.pos) > StopDistance)
+        {
+            walk.Move(testnod.Dir.x, testnod.Dir.x == 0);
+        }
+        else continue;
+    }
+}
+*/
+    private void OnDrawGizmos()
+        {
+        if(thePath.Count==0) return;
+        Gizmos.color=Color.red;
+        Gizmos.DrawSphere(thePath[0].pos,0.6f);
         }
         //public void detectTargtDirction()
         //{
