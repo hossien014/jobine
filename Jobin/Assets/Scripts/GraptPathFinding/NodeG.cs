@@ -2,8 +2,8 @@ using Abed.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Abed.GraphPathFinding
-{
+//namespace Abed.GraphPathFinding
+//{
     [ExecuteInEditMode]
     public class NodeG : MonoBehaviour
     {
@@ -70,4 +70,4 @@ namespace Abed.GraphPathFinding
         //    }
         //}
     }
-}
+//}

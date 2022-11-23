@@ -1,13 +1,13 @@
 
+using System.Collections.Generic;
 using Abed.Controler;
 using Abed.Utils;
-using System.Collections.Generic;
 using UnityEngine;
 
 
 //namespace Abed.Controler
 //{
-    [RequireComponent(typeof(Walk_Controler))]
+[RequireComponent(typeof(Walk_Controler))]
     public class AIMove_Controler : MonoBehaviour
     {
         ScreenLog_Utils sLog;
@@ -26,8 +26,9 @@ using UnityEngine;
         bool IswalkCanceld = false;
         float dir;
         float inputValue;
-        
         #endregion
+
+       public List<NodeG> thePath;
         void Start()
         {
             walk = GetComponent<Walk_Controler>();
@@ -41,8 +42,13 @@ using UnityEngine;
             walk.Setting(lockVelocity, maxSpeed, speed);
             center = gameObject.transform.Find("enmeyCenter");
             position = center.transform.position;
+            thePath= FindObjectOfType<Path>().ThePath;
            // detectTargtDirction();
-
+        }
+        private void FixedUpdate() {
+            if(thePath==null) return;
+            if(thePath.Count < 4) return;
+            GetComponent<Walk_Controler>().Move(thePath[1].Dir.x,false);
         }
        /*public void MoveTo(List<testnod> path)
         {

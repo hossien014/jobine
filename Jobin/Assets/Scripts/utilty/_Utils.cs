@@ -96,15 +96,14 @@ namespace Abed.Utils
             {
                 Vector3[] vertices = new Vector3[8];
                 BoxCollider b = obj.GetComponent<BoxCollider>();
-
                 vertices[0] = obj.transform.TransformPoint(b.center + new Vector3(-b.size.x, -b.size.y, -b.size.z) * 0.5f);
-                vertices[1] = obj.transform.TransformPoint(b.center + new Vector3(b.size.x, -b.size.y, -b.size.z) * 0.5f);
-                vertices[2] = obj.transform.TransformPoint(b.center + new Vector3(b.size.x, -b.size.y, b.size.z) * 0.5f);
-                vertices[3] = obj.transform.TransformPoint(b.center + new Vector3(-b.size.x, -b.size.y, b.size.z) * 0.5f);
-                vertices[4] = obj.transform.TransformPoint(b.center + new Vector3(-b.size.x, b.size.y, -b.size.z) * 0.5f);
-                vertices[5] = obj.transform.TransformPoint(b.center + new Vector3(b.size.x, b.size.y, -b.size.z) * 0.5f);
-                vertices[6] = obj.transform.TransformPoint(b.center + new Vector3(b.size.x, b.size.y, b.size.z) * 0.5f);
-                vertices[7] = obj.transform.TransformPoint(b.center + new Vector3(-b.size.x, b.size.y, b.size.z) * 0.5f);
+                vertices[1] = obj.transform.TransformPoint(b.center + new Vector3( b.size.x, -b.size.y, -b.size.z) * 0.5f);
+                vertices[2] = obj.transform.TransformPoint(b.center + new Vector3( b.size.x, -b.size.y,  b.size.z) * 0.5f);
+                vertices[3] = obj.transform.TransformPoint(b.center + new Vector3(-b.size.x, -b.size.y,  b.size.z) * 0.5f);
+                vertices[4] = obj.transform.TransformPoint(b.center + new Vector3(-b.size.x,  b.size.y, -b.size.z) * 0.5f);
+                vertices[5] = obj.transform.TransformPoint(b.center + new Vector3( b.size.x,  b.size.y, -b.size.z) * 0.5f);
+                vertices[6] = obj.transform.TransformPoint(b.center + new Vector3( b.size.x,  b.size.y,  b.size.z) * 0.5f);
+                vertices[7] = obj.transform.TransformPoint(b.center + new Vector3(-b.size.x,  b.size.y,  b.size.z) * 0.5f);
                 return vertices;
             }
             Debug.LogError("game objcet should have boxcolider");

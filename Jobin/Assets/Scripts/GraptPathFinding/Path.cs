@@ -2,16 +2,17 @@ using Abed.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Abed.GraphPathFinding
-{
+// namespace Abed.GraphPathFinding
+// {
     public enum NodeType { Normal, Jump, fall }
     [ExecuteInEditMode]
+    [SelectionBase]
     public class Path : MonoBehaviour
     {
         [SerializeField] bool itsEnemy;
         [SerializeField] bool DebugView;
         [SerializeField] Transform Destination;
-        [SerializeField] List<NodeG> ThePath;
+        public List<NodeG> ThePath;
         [SerializeField] int radius = 10;
         Vector3 lastTargetPos;
 
@@ -240,4 +241,4 @@ namespace Abed.GraphPathFinding
         #endregion
 
     }
-}
+//}
