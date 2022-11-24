@@ -1,21 +1,24 @@
 
 using System.Collections.Generic;
-using Abed.Controler;
+using System.Threading.Tasks;
 using Abed.Utils;
 using UnityEngine;
 
-
-//namespace Abed.Controler
-//{
+public enum platformLevel {same,notsame,unkown};
+namespace Abed.Controler
+{
 [RequireComponent(typeof(Walk_Controler))]
     public class AIMove_Controler : MonoBehaviour
     {
         ScreenLog_Utils sLog;
         MovementBhaviour_Controler player;
         [SerializeField] Transform target;
+        [SerializeField]platformLevel platform = platformLevel.unkown;
+        RaycastHit2D ThisRayBoxHit;
+        RaycastHit2D TargetRayBoxHit;
         Transform center;
-        Vector2 position;
-        Vector2 targetPos;
+        Vector3 position;
+        Vector3 targetPos;
         [SerializeField] float StopDistance = 9f;
         #region walk
         Walk_Controler walk;
@@ -26,6 +29,9 @@ using UnityEngine;
         bool IswalkCanceld = false;
         float dir;
         float inputValue;
+        
+        
+ 
         #endregion
 
        public List<NodeG> thePath;
@@ -34,101 +40,103 @@ using UnityEngine;
             walk = GetComponent<Walk_Controler>();
             sLog = FindObjectOfType<ScreenLog_Utils>();
             player = FindObjectOfType<MovementBhaviour_Controler>();
-            target = player.transform.Find("jobinCenter").transform;
         }
 
         void Update()
         {
             walk.Setting(lockVelocity, maxSpeed, speed);
-            center = gameObject.transform.Find("enmeyCenter");
-            position = center.transform.position;
-            thePath= FindObjectOfType<Path>().ThePath;
-           Distance();
-           // detectTargtDirction();
+            ThisRayBoxHit = GetComponent<Jump_Controler>().GetRayBoxHit();
+            TargetRayBoxHit = target.transform.GetComponent<Jump_Controler>().GetRayBoxHit();
         }
         private void FixedUpdate()
-    {
-        FollowThePath();
-    }
-
-    private void FollowThePath()
-    {
-        if(Distance()<=StopDistance ){ walk.Move(0,true) ;return;}
-        if (thePath == null) { walk.Move(0, true)        ;return; }
-        if (thePath.Count == 0) { walk.Move(0, true)     ;return;}
-        walk.Move(thePath[0].Dir.x, false);
-    }
-
-    /*public void MoveTo(List<testnod> path)
-{
-    foreach (testnod testnod in path)
-    {
-        if (Vector3.Distance(transform.position, testnod.pos) > StopDistance)
         {
-            walk.Move(testnod.Dir.x, testnod.Dir.x == 0);
+            checkPlatformsLevel();
+            if(platform==platformLevel.same)
+            {
+                detectTargtDirctionAndGo();
+            }
+            else
+            {
+                thePath = FindObjectOfType<Path>().ThePath; 
+                FindAndFollowThePath();
+            }
         }
-        else continue;
+
+        private void checkPlatformsLevel()
+        {
+            if (ThisRayBoxHit && TargetRayBoxHit)
+            {
+                int thisPlatformHash = ThisRayBoxHit.transform.GetHashCode();
+                int targetPlatformHash = TargetRayBoxHit.transform.GetHashCode();
+
+                if (thisPlatformHash == targetPlatformHash) 
+                {
+                platform = platformLevel.same;
+                }
+                else {
+                 platform = platformLevel.notsame;
+                }
+            }
+            else{platform=platformLevel.unkown;}
+        }
+
+        private async void FindAndFollowThePath()
+    {
+        print((Distance(true) <= StopDistance+2 )+ "distance = "+ Distance(true).ToString());
+        if (thePath == null || thePath.Count == 0 || Distance(true) <= StopDistance+2 ) { walk.Move(0, true)  ;return;}
+
+        if(thePath[0].Type==NodeType.Jump)
+        {
+            GetComponent<Jump_Controler>().JumpPresed=true;
+             walk.Move(thePath[0].Dir.x, false);
+            await Task.Delay(800);
+                GetComponent<Jump_Controler>().JumpPresed = false;
+
+            }
+
+        walk.Move(thePath[0].Dir.x, false);
+        
     }
-}
-*/
+
     private void OnDrawGizmos()
         {
        // Gizmos.color=Color.red;
        // if(thePath.Count==0||thePath==null ) return;
        // Gizmos.DrawSphere(thePath[0].pos,0.6f);
         }
-        //public void detectTargtDirction()
-        //{
-        //    //Distance();
-        //    sLog.Log(0, Distance());
-        //    if (Distance().x > 0)
-        //    {
-        //        sLog.Log(1, "right");
-        //        walk.Move(1, false);
-
-        //    }
-        //    if (Distance().x < 0)
-        //    {
-        //        sLog.Log(1, "left");
-        //        walk.Move(-1, false);
-        //    }
-        //    if (Mathf.Abs(Distance().x) < 7)
-        //    {
-        //        walk.Move(0, true);
-        //        sLog.Log(1, "reach");
-        //    }
-
-        //}
-        // public void detectTargtDirction()
-        // {
-
-        //     //sLog.Log(0, Distance());
-        //     if (Distance().x > 0)
-        //     {
-        //        // sLog.Log(1, "right");
-        //         walk.Move(1, false);
-
-        //     }
-        //     if (Distance().x < 0)
-        //     {
-        //         //sLog.Log(1, "left");
-        //         walk.Move(-1, false);
-        //     }
-        //     if (Mathf.Abs(Distance().x) < 7)
-        //     {
-        //         walk.Move(0, true);
-        //         //sLog.Log(1, "reach");
-        //     }
-
-        // }
-        private float Distance()
+      
+        public void detectTargtDirctionAndGo()
         {
-            targetPos = target.position;
-           // Vector2 distance = targetPos - position;
-           var distance =Vector2.Distance(targetPos,transform.position);
-            sLog.Log(2,distance);
-            print(distance);
+            if (Distance(false) > 0)
+            {
+               // sLog.Log(1, "right");
+                walk.Move(1, false);
+            }
+            if (Distance(false) < 0)
+            {
+                //sLog.Log(1, "left");
+                walk.Move(-1, false);
+            }
+            if (Mathf.Abs(Distance(false)) < StopDistance)
+            {
+                walk.Move(0, true);
+
+            }
+
+        }
+        private float Distance(bool absolut)
+        {
+         float distance;
+
+           if(!absolut)
+           {
+              distance = (target.position - transform.position).x;
+           } 
+           else
+           {
+            distance =Vector2.Distance(target.position,transform.position);
+           } 
             return distance;
         }
     }
-//}
+}

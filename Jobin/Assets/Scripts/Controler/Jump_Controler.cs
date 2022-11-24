@@ -17,7 +17,7 @@ namespace Abed.Controler
         SwipeDetection_Controler touch;
         ScreenLog_Utils Slog;
 
-        [SerializeField] Transform rayPos;
+       // [SerializeField] Transform rayPos;
         [SerializeField] LayerMask groundLayer;
         public bool grounded, JumpPresed, jumping, canUseCcoyote, crouch, crouchPresed, onlyOne;
         bool israyHit;
@@ -36,6 +36,7 @@ namespace Abed.Controler
         float jumpAcclreation = 0.5f;
         int jumpVelocity = 20;
         float downRayLeant = 5;
+        RaycastHit2D RayboxHit;
         #endregion
         #region event
         public event Action<float> OnJump;
@@ -54,7 +55,7 @@ namespace Abed.Controler
             touch = FindObjectOfType<SwipeDetection_Controler>();
             controls = new Controls();
             controls.movement.Enable();
-            rayPos = transform.Find("rayPos").transform;
+           // rayPos = transform.Find("rayPos").transform;
         }
         private void Update()
         {
@@ -66,7 +67,7 @@ namespace Abed.Controler
         public void jumpProtocol()
         {
             if (itsPlayer) setKey();
-            setGround();
+            setGroundAndRay();
             performJump();
             if (itsPlayer) coyoteJump();
             SetGravity();
@@ -89,7 +90,7 @@ namespace Abed.Controler
                 controls.movement.crouch.performed += ctx => { crouch = true; };
             }
         }
-        private void setGround()
+        private void setGroundAndRay()
         {
             //grounded = ShosColider.getGround();
            // lastTimeJump = ShosColider.lastTimeJump;
@@ -115,24 +116,24 @@ namespace Abed.Controler
         {
           
             var boxcolier = GetComponent<BoxCollider2D>();
+            float extraHeghit = 1f;
+            RayboxHit = Physics2D.BoxCast(boxcolier.bounds.center, boxcolier.bounds.size, 0f, Vector2.down, extraHeghit, groundLayer);
             Color colColor = Color.green;
-            float extraHeghit = 2f;
-            RaycastHit2D ratHit = Physics2D.BoxCast(boxcolier.bounds.center, boxcolier.bounds.size, 0f, Vector2.down, extraHeghit, groundLayer);
 
-            if (ratHit.collider == null) { 
+            if (RayboxHit.collider == null) { 
              grounded = false;
              colColor = Color.red; }
             else { 
             grounded = true;
             colColor = Color.green;
-                if (falling && ratHit.distance <= landingDistance)
+                if (falling && RayboxHit.distance <= landingDistance)
                 {
                     jumpstate = JumpStat.Lande;
                     if (onlyOne)
                     {
                         landed_C += 1;
                         onlyOne = false;
-                        Onlanding?.Invoke(ratHit);
+                        Onlanding?.Invoke(RayboxHit);
                     }
                 }
             }
@@ -239,6 +240,10 @@ namespace Abed.Controler
             this.landingDistance = landingDistance;
             this.jumpVelocity = jumpVelocity;
             this.downRayLeant = downRayLeant;
+        }
+        public RaycastHit2D GetRayBoxHit()
+        {
+            return RayboxHit;
         }
         void debugJUmp() //delete for final build
         {

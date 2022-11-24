@@ -8,11 +8,12 @@ TagManager:
   - grid/xmh/
   - Grid
   - waypoint
+  - grounds
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - ground
   - Water
   - UI
   - 
