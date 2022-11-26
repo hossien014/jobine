@@ -59,7 +59,7 @@ using UnityEngine;
         void FindConected()
         {
             Path Conectnod = FindObjectOfType<Path>();
-            ConectedList = Conectnod.GetInRangeNodeList(pos, 5,searchCenter.orgine, false);
+            ConectedList = Conectnod.GetInRangeNodeList(pos, 15,3, true);
         }
 
         //private void OnDrawGizmos()

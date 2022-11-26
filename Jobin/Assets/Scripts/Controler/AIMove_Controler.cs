@@ -47,10 +47,11 @@ namespace Abed.Controler
             walk.Setting(lockVelocity, maxSpeed, speed);
             ThisRayBoxHit = GetComponent<Jump_Controler>().GetRayBoxHit();
             TargetRayBoxHit = target.transform.GetComponent<Jump_Controler>().GetRayBoxHit();
+
         }
         private void FixedUpdate()
         {
-            checkPlatformsLevel();
+            checkPlatformsLevel(); //step 1 
             if(platform==platformLevel.same)
             {
                 detectTargtDirctionAndGo();
@@ -59,6 +60,7 @@ namespace Abed.Controler
             {
                 thePath = FindObjectOfType<Path>().ThePath; 
                 FindAndFollowThePath();
+
             }
         }
 
@@ -68,6 +70,8 @@ namespace Abed.Controler
             {
                 int thisPlatformHash = ThisRayBoxHit.transform.GetHashCode();
                 int targetPlatformHash = TargetRayBoxHit.transform.GetHashCode();
+                FindObjectOfType<ScreenLog_Utils>().Log(1, "enemy plat " + thisPlatformHash);
+                FindObjectOfType<ScreenLog_Utils>().Log(2, "jobin plat " + targetPlatformHash);
 
                 if (thisPlatformHash == targetPlatformHash) 
                 {
@@ -98,13 +102,6 @@ namespace Abed.Controler
         
     }
 
-    private void OnDrawGizmos()
-        {
-       // Gizmos.color=Color.red;
-       // if(thePath.Count==0||thePath==null ) return;
-       // Gizmos.DrawSphere(thePath[0].pos,0.6f);
-        }
-      
         public void detectTargtDirctionAndGo()
         {
             if (Distance(false) > 0)

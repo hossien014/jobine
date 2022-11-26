@@ -13,7 +13,7 @@ namespace Abed.Utils
         {
 
             logText[logBox].text = log.ToString();
-            logText[logBox].fontSize = 54;
+            logText[logBox].fontSize = 25;
         }
         public void Log<T>(int logBox, T log, int fontSize)
         {
