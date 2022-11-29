@@ -157,6 +157,11 @@ namespace Abed.Utils
         }
         #endregion
         #region Dirctions
+        public static Vector3 LerpByDistance(Vector3 A, Vector3 B, float x)
+        {
+            Vector3 P = x * Vector3.Normalize(B - A) + A;
+            return P;
+        }
         public static Vector3 GetDirction8(Vector3 a, Vector3 b)
         {
             if (b.x > a.x)
@@ -220,5 +225,12 @@ namespace Abed.Utils
             return roundVector;
         }
         #endregion
-    }
+        public static void DeleteOBjectWhitChild(GameObject obj)
+        {
+         foreach(Transform  ChildObj in obj.transform)
+         {
+            GameObject.Destroy(ChildObj);
+         }
+        }
+   }
 }

@@ -13,19 +13,23 @@ using UnityEngine;
         public NodeG exploredFrome;
         public NodeType Type = NodeType.Normal;
         public Vector3 Dir;
+        [SerializeField] int XRang=5;
+        [SerializeField] int YRang =5;
 
-        private void Start()
+
+    private void Start()
         {
             PrimitiveSetup();
             DebugVistual();
             FindConected();
-            
+
         }
         private void LateUpdate()
         {
+
             PrimitiveSetup();
             DebugVistual();
-            FindConected();
+            FindConected(); 
         }
 
         private void DebugVistual()
@@ -59,16 +63,20 @@ using UnityEngine;
         void FindConected()
         {
             Path Conectnod = FindObjectOfType<Path>();
-            ConectedList = Conectnod.GetInRangeNodeList(pos, 15,3, true);
+            ConectedList = Conectnod.GetInRangeNodeList(pos,5,searchCenter.orgine, false);
         }
 
-        //private void OnDrawGizmos()
-        //{
-        //    foreach(NodeG nod in ConectedList)
-        //    {
-        //        Gizmos.color=Color.black;
-        //        Gizmos.DrawLine(pos, nod.pos);
-        //    }
-        //}
+        private void OnDrawGizmos()
+    {
+        ShowConectedNode(); 
     }
+    private void ShowConectedNode()
+    {
+        foreach (NodeG nod in ConectedList)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(pos, nod.pos);
+        }
+    }
+}
 //}

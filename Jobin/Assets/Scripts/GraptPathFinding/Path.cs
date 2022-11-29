@@ -7,60 +7,46 @@ using UnityEngine;
     public enum NodeType { Normal, Jump, fall,blocked }
     public enum searchCenter{orgine,center}
     [ExecuteInEditMode]
-    [SelectionBase]
     public class Path : MonoBehaviour
     {
-        [SerializeField] bool itsEnemy;
+        [SerializeField] Transform Destination; //target
+        [SerializeField] bool itsEnemy; //delete
         [SerializeField] bool DebugView;
-        [SerializeField] Transform Destination;
         public List<NodeG> ThePath;
         [SerializeField] int radius = 10;
-        Vector3 lastTargetPos;
+        NodeG lastEndNode;
 
 
         private void Awake()
         {
             ThePath = null;
-            FindingPathProcees();
+         //   FindingPathProcees();
         }
         void LateUpdate()
         {
-            // if (lastTargetPos != Destination.position) { FindingPathProcees(); }
-            FindingPathProcees();
+            
+           // FindingPathProcees();
             _Utils.reloadScene();
         }
-        private void FindingPathProcees()
+        public void FindingPathProcees(Transform thisObj,Transform targetObj)
         {
-            lastTargetPos = Destination.position;
             if (!itsEnemy) return;
-            GetStartAndEnd(out NodeG start, out NodeG end);
-            DEbug_Behaviour(start, end);
-            if (start == null || end == null) ThePath = null;
+            GetStartAndEnd(thisObj,targetObj,out NodeG start, out NodeG end);
+            if(end != null) lastEndNode = end;
+            Debug.DrawLine(lastEndNode.pos, lastEndNode.pos + Vector3.up * 5,Color.red);
+            DEbug_Behaviour(start, lastEndNode);
+            if (start == null || lastEndNode == null) ThePath = null;
             else
             {
-                ThePath = GetPath(start, end);
+                ThePath = GetPath(start, lastEndNode);;
                 CalculateNodeType(ThePath);
             }
         }
-        private void GetStartAndEnd(out NodeG Start, out NodeG End)
+        private void GetStartAndEnd(Transform ThisObj,Transform targtObj,out NodeG Start, out NodeG End)
         {
-            Start = GetNode(transform,searchCenter.orgine);
-            End = GetNode(Destination,searchCenter.orgine);
+            Start = GetNode(ThisObj,searchCenter.orgine);
+            End = GetNode(targtObj,searchCenter.orgine);
             if (DebugView) Debug.DrawLine(Start.pos, End.pos, Color.magenta, 0.3f);
-        }
-        NodeG GetNode(Transform Target,searchCenter searchcenter)
-        {
-            //Vector2 key = new Vector2(Mathf.FloorToInt(Target.transform.position.x), Mathf.FloorToInt(Target.transform.position.y));
-            Vector2 key = Target.transform.position.FloorVector();
-            List<NodeG> nearlist = GetInRangeNodeList(key, radius,searchcenter,true);
-
-            //  nodedic.TryGetValue(key, out testnod PNode);
-            if (nearlist.Count > 0)
-            {
-                var nearestNode = GetNearestNode(key, nearlist);
-                return nearestNode;
-            }
-            else return null;
         }
         private List<NodeG> GetPath(NodeG start, NodeG end)
         {
@@ -117,6 +103,110 @@ using UnityEngine;
             ThePath = Path;
             return Path;
         }
+    #region Node Tools 
+        public Dictionary<Vector2, NodeG> GetNodesDictionery()
+        {
+            Dictionary<Vector2, NodeG> Nodes = new Dictionary<Vector2, NodeG>();
+            NodeG[] AllTNodeInSceen = FindObjectsOfType<NodeG>();
+            if (AllTNodeInSceen.Length == 0) { Debug.Log("*Ther is No Node in sceen*"); return null; }
+            else
+            {
+                foreach (NodeG nod in AllTNodeInSceen)
+                {
+                    if (Nodes.ContainsKey(nod.Key))
+                    {
+                        Debug.Log("Duplicate Node found "+ nod.Key.ToString());
+                       // DuplicateNode.Add(nod);
+                        continue; 
+                    } 
+                    Nodes.Add(nod.Key, nod);
+                }
+                return Nodes;
+            }
+        }
+    NodeG GetNode(Transform Target,searchCenter searchcenter)
+        {
+            //Vector2 key = new Vector2(Mathf.FloorToInt(Target.transform.position.x), Mathf.FloorToInt(Target.transform.position.y));
+            Vector2 key = Target.transform.position.FloorVector();
+            List<NodeG> nearlist = GetInRangeNodeList(key, radius,searchcenter,true);
+
+            //  nodedic.TryGetValue(key, out testnod PNode);
+            if (nearlist.Count > 0)
+            {
+                var nearestNode = GetNearestNode(key, nearlist);
+                return nearestNode;
+            }
+            else return null;
+        }
+        #region Get nearest Liste
+    // noraml get in range 
+    public List<NodeG> GetInRangeNodeList(Vector3 TargetNode, int range,searchCenter searchcenter, bool DebugView)
+    {
+        var NodeDictionery = GetNodesDictionery(); // just do do it at start 
+        var NearNodesList = new List<NodeG>();
+
+          Getstartsearch(range, searchcenter,out int startPoint,out int endPoint);
+
+        for (int x = Mathf.RoundToInt(TargetNode.x - (range - startPoint)); x <= TargetNode.x + range+endPoint; x++)
+        {
+            for (int y = Mathf.RoundToInt(TargetNode.y - (range - startPoint)); y <= TargetNode.y + range+endPoint; y++)
+            {
+                //Gizmos.DrawSphere(new Vector2(x, y), 0.1f); // debug
+                if (NodeDictionery.ContainsKey(new Vector2(x, y)))
+                {
+                    NodeDictionery.TryGetValue(new Vector2(x, y), out NodeG nearNode);
+                    if (nearNode.pos == TargetNode) continue;
+                    NearNodesList.Add(nearNode);
+                }
+            }
+        }
+        
+        if (DebugView) ShowSearchBox(TargetNode, range, searchcenter);
+        if (DebugView) DarawLineInList(NearNodesList);
+        return NearNodesList;
+    }
+   // x and y get in range 
+    public List<NodeG> GetInRangeNodeList(Vector3 TargetNode, int xrange, int yrange,  bool DebugView)
+    {
+        var NodeDictionery = GetNodesDictionery(); // just do do it at start 
+        var NearNodesList = new List<NodeG>();
+
+
+        for (int x = Mathf.RoundToInt(TargetNode.x -xrange); x <= TargetNode.x + xrange; x++)
+        {
+            for (int y = Mathf.RoundToInt(TargetNode.y -yrange); y <= TargetNode.y + yrange; y++)
+            {
+                //Gizmos.DrawSphere(new Vector2(x, y), 0.1f); // debug
+                if (NodeDictionery.ContainsKey(new Vector2(x, y)))
+                {
+                    NodeDictionery.TryGetValue(new Vector2(x, y), out NodeG nearNode);
+                    if (nearNode.pos == TargetNode) continue;
+                    NearNodesList.Add(nearNode);
+                }
+            }
+        }
+
+        if (DebugView) ShowSearchBox(TargetNode, xrange,yrange);
+        if (DebugView) DarawLineInList(NearNodesList);
+        return NearNodesList;
+    }
+    #endregion
+        public NodeG GetNearestNode(Vector3 pos, List<NodeG> nearList)
+        {
+            if (nearList.Count == 0) return null;
+            NodeG Nearestnod = nearList[0];
+            foreach (NodeG Bnod in nearList)
+            {
+                float NearaNodDis = Vector3.Distance(pos, Nearestnod.pos);
+                float BNodeDis = Vector3.Distance(pos, Bnod.pos);
+                if (BNodeDis < NearaNodDis)
+                {
+                    Nearestnod = Bnod;
+                }
+            }
+            Debug.DrawLine(Nearestnod.pos, Nearestnod.pos + Vector3.up * 3, Color.green);
+            return Nearestnod;
+        }
         public void CalculateNodeType(List<NodeG> Path)
         {
 
@@ -143,96 +233,13 @@ using UnityEngine;
             if (XDistance > 0) Path[i].Dir = Vector3.right;
             if (XDistance < 0) Path[i].Dir = Vector3.left;
         }
-        public Dictionary<Vector2, NodeG> GetNodesDictionery()
-        {
-            Dictionary<Vector2, NodeG> Nodes = new Dictionary<Vector2, NodeG>();
-            NodeG[] AllTNodeInSceen = FindObjectsOfType<NodeG>();
-            if (AllTNodeInSceen.Length == 0) { Debug.Log("*Ther is No Node in sceen*"); return null; }
-            else
-            {
-                foreach (NodeG nod in AllTNodeInSceen)
-                {
-                    if (Nodes.ContainsKey(nod.Key)) continue;
-                    Nodes.Add(nod.Key, nod);
-                }
-                return Nodes;
-            }
-        }
-// noraml get in range 
-    public List<NodeG> GetInRangeNodeList(Vector3 TargetNode, int range,searchCenter searchcenter, bool DebugView)
-    {
-        var NodeDictionery = GetNodesDictionery(); // just do do it at start 
-        var NearNodesList = new List<NodeG>();
-
-          Getstartsearch(range, searchcenter,out int startPoint,out int endPoint);
-
-        for (int x = Mathf.RoundToInt(TargetNode.x - (range - startPoint)); x <= TargetNode.x + range+endPoint; x++)
-        {
-            for (int y = Mathf.RoundToInt(TargetNode.y - (range - startPoint)); y <= TargetNode.y + range+endPoint; y++)
-            {
-                //Gizmos.DrawSphere(new Vector2(x, y), 0.1f); // debug
-                if (NodeDictionery.ContainsKey(new Vector2(x, y)))
-                {
-                    NodeDictionery.TryGetValue(new Vector2(x, y), out NodeG nearNode);
-                    if (nearNode.pos == TargetNode) continue;
-                    NearNodesList.Add(nearNode);
-                }
-            }
-        }
-        
-        if (DebugView) ShowSearchBox(TargetNode, range, searchcenter);
-        if (DebugView) DarawLineInList(NearNodesList);
-        return NearNodesList;
-    }
-
-// x and y get in range 
-    public List<NodeG> GetInRangeNodeList(Vector3 TargetNode, int xrange, int yrange,  bool DebugView)
-    {
-        var NodeDictionery = GetNodesDictionery(); // just do do it at start 
-        var NearNodesList = new List<NodeG>();
-
-
-        for (int x = Mathf.RoundToInt(TargetNode.x -xrange); x <= TargetNode.x + xrange; x++)
-        {
-            for (int y = Mathf.RoundToInt(TargetNode.y -yrange); y <= TargetNode.y + yrange; y++)
-            {
-                //Gizmos.DrawSphere(new Vector2(x, y), 0.1f); // debug
-                if (NodeDictionery.ContainsKey(new Vector2(x, y)))
-                {
-                    NodeDictionery.TryGetValue(new Vector2(x, y), out NodeG nearNode);
-                    if (nearNode.pos == TargetNode) continue;
-                    NearNodesList.Add(nearNode);
-                }
-            }
-        }
-
-        if (DebugView) ShowSearchBox(TargetNode, xrange,yrange);
-        if (DebugView) DarawLineInList(NearNodesList);
-        return NearNodesList;
-    }
-    private void Getstartsearch(int range, searchCenter searchcenter,out int startPoint, out int endPoint)
+        private void Getstartsearch(int range, searchCenter searchcenter,out int startPoint, out int endPoint)
     {
         if (searchcenter == searchCenter.center){ startPoint = range; endPoint=range / 2;}
         else {startPoint = 0; endPoint=range=0;}
     }
-
-    public NodeG GetNearestNode(Vector3 pos, List<NodeG> nearList)
-        {
-            if (nearList.Count == 0) return null;
-            NodeG Nearestnod = nearList[0];
-            foreach (NodeG Bnod in nearList)
-            {
-                float NearaNodDis = Vector3.Distance(pos, Nearestnod.pos);
-                float BNodeDis = Vector3.Distance(pos, Bnod.pos);
-                if (BNodeDis < NearaNodDis)
-                {
-                    Nearestnod = Bnod;
-                }
-            }
-            Debug.DrawLine(Nearestnod.pos, Nearestnod.pos + Vector3.up * 3, Color.green);
-            return Nearestnod;
-        }
-        #region Debug 
+    #endregion
+    #region Debug 
         public void DEbug_Behaviour(NodeG start, NodeG end)
         {
             if (DebugView) return;

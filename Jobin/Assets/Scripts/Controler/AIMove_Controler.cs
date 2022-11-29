@@ -16,9 +16,6 @@ namespace Abed.Controler
         [SerializeField]platformLevel platform = platformLevel.unkown;
         RaycastHit2D ThisRayBoxHit;
         RaycastHit2D TargetRayBoxHit;
-        Transform center;
-        Vector3 position;
-        Vector3 targetPos;
         [SerializeField] float StopDistance = 9f;
         #region walk
         Walk_Controler walk;
@@ -29,12 +26,10 @@ namespace Abed.Controler
         bool IswalkCanceld = false;
         float dir;
         float inputValue;
-        
-        
- 
         #endregion
-
        public List<NodeG> thePath;
+        bool Updatpath;
+
         void Start()
         {
             walk = GetComponent<Walk_Controler>();
@@ -55,15 +50,26 @@ namespace Abed.Controler
             if(platform==platformLevel.same)
             {
                 detectTargtDirctionAndGo();
+                Updatpath = false;
             }
             else
             {
-                thePath = FindObjectOfType<Path>().ThePath; 
+                Updatpath = true;
                 FindAndFollowThePath();
-
             }
         }
 
+        private void SetPath()
+        {
+            FindObjectOfType<Path>().FindingPathProcees(transform, target);
+            thePath = FindObjectOfType<Path>().ThePath;
+        }
+
+        private void LateUpdate()
+        {
+            if(Updatpath) SetPath(); 
+
+        }
         private void checkPlatformsLevel()
         {
             if (ThisRayBoxHit && TargetRayBoxHit)
@@ -83,7 +89,6 @@ namespace Abed.Controler
             }
             else{platform=platformLevel.unkown;}
         }
-
         private async void FindAndFollowThePath()
     {
         print((Distance(true) <= StopDistance+2 )+ "distance = "+ Distance(true).ToString());
